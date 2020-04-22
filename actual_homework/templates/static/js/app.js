@@ -1,3 +1,15 @@
+function obtainingDemographicInformation(){
+    // reading the json file
+    let samples = d3.json("samples.json");
+    samples.then( (sampleData) => {
+        let data = sampleData;
+        console.log(data.metadata);
+        let metaData = data.metaData;
+        console.log(metaData);
+    });
+};
+
+
 
 function initilialisingDataSequence() {
 // init function made here binds itself to the 
@@ -24,7 +36,13 @@ function initilialisingDataSequence() {
 
 initilialisingDataSequence()
 
+obtainingDemographicInformation()
 
+//
+//
+//  Please Ignore the below, these are the previous attempts and I now need PTSD therapy and a therapy dog preferably a goofy looking husky
+//
+//
 // The stuff below was confusing
 
 // let samples = d3.json("samples.json");
