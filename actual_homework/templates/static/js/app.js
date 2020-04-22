@@ -1,13 +1,36 @@
-function obtainingDemographicInformation(){
-    // reading the json file
+// Producing the graphs
+function graphProduction(patientData){
     let samples = d3.json("samples.json");
     samples.then( (sampleData) => {
         let data = sampleData;
-        console.log(data.metadata);
-        let metaData = data.metaData;
-        console.log(metaData);
+        console.log(`data coming from the graphProduction function ${data}`);
     });
 };
+
+// // extracting the demographic data
+// function obtainingDemographicInformation(patientData){
+//     // reading the json file
+//     let samples = d3.json("samples.json");
+//     samples.then( (sampleData) => {
+//         let data = sampleData;
+//         // console.log(`Sanity chcking the metadata${data.metadata}`); // This works
+//         let metaData = data.metaData;
+
+//         // assigning the id of the sample data window on the website
+//         let sampleDataWindow = d3.select("#sample-metadata");
+
+//         // filtering the metaData information to get the id
+//         let metaDataFiltered = metaData.filter(meta => meta.id.toString() === patientData);
+
+//         // This is to reset the sample data window
+//         sampleDataWindow.html("");
+
+//         // an attempt to append the 
+//         Object.entries(metaDataFiltered).forEach( (key) => {
+//             sampleDataWindow.append("p").text(`${key[0].toLowerCase()}: ${key[1]} \n`);
+//         });
+//     });
+// };
 
 
 
@@ -18,25 +41,29 @@ function initilialisingDataSequence() {
 // making the dropdown menu
     let samples = d3.json("samples.json");
 // assigning the sameples json value as samples
+    
     samples.then((sampleData) => {
         let data =  sampleData;
-        console.log(data);
-// doing a sanity check
+
+        console.log(`data from the initialisingDataSequence function ${data}`);
+        // doing a sanity check
 // for loop to append the option value in the dropdown menu
         data.names.forEach( (n) => {
             dropDownMenu.append("option")
             .text(n)
             .property("value");
         });
-
+        
+        // seeing if the demographic window works -- right now it doesn't
+        // obtainingDemographicInformation(sampleData.names[0])
     });
 // Up to this point I have connected the subjects name
 // to the bloody dropdown menu
+
 }
 
 initilialisingDataSequence()
 
-obtainingDemographicInformation()
 
 //
 //
