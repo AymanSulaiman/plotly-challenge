@@ -1,26 +1,13 @@
+
 // Producing the graphs
-function graphProduction(patientData){
+ function graphProduction(pData) {
     let samples = d3.json("samples.json");
     samples.then( (sampleData) => {
         
         let data = sampleData;
         console.log(`data coming from the graphProduction function: ${data}`);
         
-        // exploring the raw data
-        // let otuId = data.samples[0].otu_ids; // ignore this
-        // console.log(otuId);
-
-        // let otuSamples = data.samples[0].sample_values;
-        // console.log(otuSamples)
-
-        // let otuSampleValues = data.samples[0].sample_values.slice(0,10).reverse(); // ignore this
-        // console.log(`OTU sample values from patient 940: ${otuSampleValues}`) // ignore this
-
-        // let otuIdLabels = data.samples[0].otu_labels.slice(0,10).reverse(); // ignore this
-        // console.log(`top 10 OTU id labels from patient 940: ${otuIdLabels}`); // ignore this
-
-        // This is in acending order and the assigned variables work the way I want them to the ones above do not
-        // I think these can work as the labels in a manor of speaking
+        
         let top10otuId = data.samples[0].otu_ids.slice(0,10).reverse(); 
         console.log(top10otuId);
 
@@ -33,11 +20,6 @@ function graphProduction(patientData){
         let top10otuLabels = data.samples[0].otu_labels.slice(0,10).reverse();
         console.log(top10otuLabels);
 
-        // let otuId = data.samples[0].otu_ids; 
-        // console.log(otuId);
-
-        // let otuSamplesValues = data.samples[0].sample_values;
-        // console.log(otuSamplesValues)
 
         // This is for the horizontal bar chart for the top 10 OTU bacteria found 
 
@@ -75,18 +57,18 @@ function graphProduction(patientData){
 
         let trace1 = {
             x: otuId,
-            y:otuSamples,
+            y: otuSamplesValues,
             mode: "markers",
             marker: {
                 size: otuSamplesValues,
-                colour: otuId
+                color: otuId
             },
             text: otuLables
         };
 
         let layout1 = {
             xaxis:{
-                title: "OTU ID colour coded"
+                title: "OTU ID and Number counted in bubbles"
             }
         };
 
@@ -97,64 +79,77 @@ function graphProduction(patientData){
     });
 };
 
-// // extracting the demographic data
-// function obtainingDemographicInformation(patientData){
-//     // reading the json file
-//     let samples = d3.json("samples.json");
-//     samples.then( (sampleData) => {
-//         let data = sampleData;
-//         // console.log(`Sanity chcking the metadata${data.metadata}`); // This works
-//         let metaData = data.metaData;
+// extracting the demographic data
+function obtainingDemographicInformation(patientData){
+    // reading the json file
+    let samples = d3.json("samples.json");
 
-//         // assigning the id of the sample data window on the website
-//         let sampleDataWindow = d3.select("#sample-metadata");
+    samples.then( (sampleData) => {
+    
+        let data = sampleData;
+        // console.log(`Sanity chcking the metadata${data.metadata}`); // This works
+    
+        let metaData = data.metadata;
 
-//         // filtering the metaData information to get the id
-//         let metaDataFiltered = metaData.filter(meta => meta.id.toString() === patientData);
+        // filtering the metaData information to get the id
+        let metaDataFiltered = metaData.filter(d => d.id.toString() === patientData)[0]; 
 
-//         // This is to reset the sample data window
-//         sampleDataWindow.html("");
+        // assigning the id of the sample data window on the website
+        let sampleDataWindow = d3.select("#sample-metadata");
 
-//         // an attempt to append the 
-//         Object.entries(metaDataFiltered).forEach( (key) => {
-//             sampleDataWindow.append("p").text(`${key[0].toLowerCase()}: ${key[1]} \n`);
-//         });
-//     });
-// };
+        // This is to reset the sample data window
+        sampleDataWindow.html("");
 
+        // an attempt to append the 
+        Object.entries(metaDataFiltered).forEach( (key) => {
+            sampleDataWindow.append("p").text(`${key[0]}: ${key[1]} \n`);
+        });
+    });
+};
 
+function patientChanger(patientData) {
+    graphProduction(patientData);
+    obtainingDemographicInformation(patientData);
+}
 
 function initilialisingDataSequence() {
-// init function made here binds itself to the 
-// dropdown menu and I named it that because it sounds cool
+    // init function made here binds itself to the 
+    // dropdown menu and I named it that because it sounds cool
+    
     let dropDownMenu = d3.select("#selDataset");
-// making the dropdown menu
+    // making the dropdown menu
+    
     let samples = d3.json("samples.json");
-// assigning the sameples json value as samples
+    // assigning the sameples json value as samples
     
     samples.then((sampleData) => {
         let data =  sampleData;
 
         console.log(`data from the initialisingDataSequence function ${data}`);
         // doing a sanity check
-// for loop to append the option value in the dropdown menu
+        // for loop to append the option value in the dropdown menu
         data.names.forEach( (n) => {
             dropDownMenu.append("option")
             .text(n)
             .property("value");
         });
         
-        // seeing if the demographic window works -- right now it doesn't
-        // obtainingDemographicInformation(sampleData.names[0])
-
-        graphProduction(data.names[0])
+        
+        // seeing if the demographic window works
+        obtainingDemographicInformation(sampleData)
+        graphProduction(sampleData)
+        
     });
-// Up to this point I have connected the subjects name
-// to the bloody dropdown menu
-
 }
 
 initilialisingDataSequence()
+
+
+
+
+
+
+
 
 
 //
