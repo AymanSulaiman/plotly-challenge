@@ -2,8 +2,98 @@
 function graphProduction(patientData){
     let samples = d3.json("samples.json");
     samples.then( (sampleData) => {
+        
         let data = sampleData;
-        console.log(`data coming from the graphProduction function ${data}`);
+        console.log(`data coming from the graphProduction function: ${data}`);
+        
+        // exploring the raw data
+        // let otuId = data.samples[0].otu_ids; // ignore this
+        // console.log(otuId);
+
+        // let otuSamples = data.samples[0].sample_values;
+        // console.log(otuSamples)
+
+        // let otuSampleValues = data.samples[0].sample_values.slice(0,10).reverse(); // ignore this
+        // console.log(`OTU sample values from patient 940: ${otuSampleValues}`) // ignore this
+
+        // let otuIdLabels = data.samples[0].otu_labels.slice(0,10).reverse(); // ignore this
+        // console.log(`top 10 OTU id labels from patient 940: ${otuIdLabels}`); // ignore this
+
+        // This is in acending order and the assigned variables work the way I want them to the ones above do not
+        // I think these can work as the labels in a manor of speaking
+        let top10otuId = data.samples[0].otu_ids.slice(0,10).reverse(); 
+        console.log(top10otuId);
+
+        let top10otuIdMapped = top10otuId.map( d => `OTU ${d}`);
+        console.log(top10otuIdMapped) // this is going to be used instead of top10otuID for labeling and stuff
+
+        let top10otuValues = data.samples[0].sample_values.slice(0,10).reverse();
+        console.log(top10otuValues);
+
+        let top10otuLabels = data.samples[0].otu_labels.slice(0,10).reverse();
+        console.log(top10otuLabels);
+
+        // let otuId = data.samples[0].otu_ids; 
+        // console.log(otuId);
+
+        // let otuSamplesValues = data.samples[0].sample_values;
+        // console.log(otuSamplesValues)
+
+        // This is for the horizontal bar chart for the top 10 OTU bacteria found 
+
+        let trace0 = {
+            x: top10otuValues,
+            y: top10otuIdMapped,
+            marker: {color: 'blue'},
+            type: "bar",
+            orientation: "h"
+        };
+
+        let barData = [trace0]; 
+
+        let layout0 = {
+            title: "Top 10 bacteria found in OTU",
+            yaxis:{
+                tickmode: "linear"
+            }
+        };
+
+        Plotly.newPlot("bar", barData, layout0);
+
+        // This is for the horizontal bar chart for the top 10 OTU bacteria found 
+
+        // This is for the bubble chart
+        
+        let otuId = data.samples[0].otu_ids; 
+        console.log(otuId);
+
+        let otuSamplesValues = data.samples[0].sample_values;
+        console.log(otuSamplesValues)
+
+        let otuLables = data.samples[0].otu_values;
+        console.log(otuLables)
+
+        let trace1 = {
+            x: otuId,
+            y:otuSamples,
+            mode: "markers",
+            marker: {
+                size: otuSamplesValues,
+                colour: otuId
+            },
+            text: otuLables
+        };
+
+        let layout1 = {
+            xaxis:{
+                title: "OTU ID colour coded"
+            }
+        };
+
+        bubbleData = [trace1]
+
+        Plotly.newPlot("bubble", bubbleData, layout1);
+
     });
 };
 
@@ -56,6 +146,8 @@ function initilialisingDataSequence() {
         
         // seeing if the demographic window works -- right now it doesn't
         // obtainingDemographicInformation(sampleData.names[0])
+
+        graphProduction(data.names[0])
     });
 // Up to this point I have connected the subjects name
 // to the bloody dropdown menu
